@@ -1,8 +1,8 @@
 import React, {useEffect, useState, useRef} from 'react';
 import logo from './logo.svg';
-import './App.css';
 import axios from 'axios'
 import { info } from 'autoprefixer';
+import Card from './components/Card';
 
 function App() {
 
@@ -56,13 +56,13 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className="bg-gray-100">
       <div>
         <ul>
           {
             appState.characters.map((character, index) => (
               <li key={index}>
-                  <h2>{character.name}</h2>
+                  <Card character={character} />
               </li>
             ))
           }
