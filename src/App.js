@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import axios from 'axios'
@@ -14,44 +14,63 @@ function App() {
       next: null,
       prev: null
     },
-    characters: [],
-    currentPage: 0
+    characters: []
   })
+  const [page, setPage] = useState(1)
+  const loader = useRef(null) // Create reference to use as an intersection observer
+
+  const getCharacters = async () => {
+    setAppState({...appState, loading: true})
+    await axios.get(`https://rickandmortyapi.com/api/character?page=${page}`)
+          .then(res => {
+            console.log(res)
+            setAppState({...appState, loading: false, info: res.data.info, characters: appState.characters.concat(res.data.results) })
+          }).catch(err => {
+            setAppState({...appState, loading: false})
+          })
+  }
 
   useEffect(() => {
-    console.log('Loading')
-    setAppState({...appState, loading: true})
-    axios.get('https://rickandmortyapi.com/api/character')
-      .then(res => {
-        console.log(res)
-        setAppState({...appState, loading: false, info: res.data.info, characters: res.data.results })
-      }).catch(err => {
-        setAppState({...appState, loading: false})
-      })
-  }, [setAppState])
+    const options = {
+       root: null,
+       rootMargin: "20px",
+       threshold: 1.0
+    }
+    // Define observer which triggers character fetching
+    const observer = new IntersectionObserver(handleObserver, options);
+    if (loader.current) {
+       observer.observe(loader.current)
+    }
+  }, [])
 
-  const doSomething = () => {
-    console.log('A')
-    setAppState({...appState, currentPage: appState.currentPage + 1})
+  useEffect(async () => {
+    //On every page increment fetch & propagate characters
+    await getCharacters()
+  }, [page])
+
+  const handleObserver = (entities) => {
+    const target = entities[0];
+    if (target.isIntersecting) {   
+        setPage((page) => page + 1)
+    }
   }
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <button onClick={doSomething}>CLick</button>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>
+        <ul>
+          {
+            appState.characters.map((character, index) => (
+              <li key={index}>
+                  <h2>{character.name}</h2>
+              </li>
+            ))
+          }
+        </ul>
+        <div ref={loader}>
+          <h2>Load More</h2>
+        </div>
+      </div>
     </div>
   );
 }
