@@ -56,20 +56,18 @@ function App() {
   }
 
   return (
-    <div className="bg-gray-100">
-      <div>
-        <ul>
-          {
-            appState.characters.map((character, index) => (
-              <li key={index}>
-                  <Card character={character} />
-              </li>
-            ))
-          }
-        </ul>
-        <div ref={loader}>
-          <h2>Load More</h2>
-        </div>
+    <div className="container mx-auto px-7 bg-gray-100 md:px-28 lg:px-32">
+      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {
+          appState.characters.map((character, index) => (
+            <div key={index}>
+              <Card character={character} />
+            </div>
+          ))
+        }
+      </div>
+      <div ref={loader}>
+        <h2>Load More</h2>
       </div>
     </div>
   );

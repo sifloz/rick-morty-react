@@ -2,9 +2,9 @@ import React from 'react';
 
 const Card = ({character}) => {
   return (
-    <div className="flex flex-col justify-center items-center px-5 py-6 bg-white rounded-xl">
+    <div className="flex flex-col justify-start items-center px-5 py-6 bg-white rounded-xl h-full hover:shadow-xl cursor-pointer transition delay-50 duration-300 ease-in-out">
       <div className={`flex flex-row justify-center items-center p-2 mb-5 rounded-full border-2 ${character.gender.toLowerCase() === 'male' ? 'border-blue-500' : character.gender.toLowerCase() === 'female' ? 'border-pink-500' : 'border-gray-500'}`}>
-        <img className="w-28 h-28 max-w-28 max-h-28 rounded-full" src={character.image} alt={character.name} />
+        <img className="w-24 h-24 max-w-24 max-h-24 rounded-full" src={character.image} alt={character.name} />
       </div>
       <div className="flex flex-col justify-center items-center p-0">
         <div className="flex flex-col items-start p-0 mb-3">
