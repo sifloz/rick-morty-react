@@ -4,6 +4,7 @@ import axios from 'axios'
 import { info } from 'autoprefixer';
 import Card from './components/Card';
 import Header from './components/Header';
+import Loader from './components/Loader';
 
 function App() {
 
@@ -15,7 +16,8 @@ function App() {
       next: null,
       prev: null
     },
-    characters: []
+    characters: [],
+    doneFetching: false
   })
   const [page, setPage] = useState(1)
   const loader = useRef(null) // Create reference to use as an intersection observer
@@ -25,7 +27,7 @@ function App() {
     await axios.get(`https://rickandmortyapi.com/api/character?page=${page}`)
           .then(res => {
             console.log(res)
-            setAppState({...appState, loading: false, info: res.data.info, characters: appState.characters.concat(res.data.results) })
+            setAppState({...appState, loading: false, info: res.data.info, characters: appState.characters.concat(res.data.results), doneFetching: res.data.info && !res.data.info.next })
           }).catch(err => {
             setAppState({...appState, loading: false})
           })
@@ -68,8 +70,20 @@ function App() {
           ))
         }
       </div>
-      <div ref={loader}>
-        <h2>Load More</h2>
+      <div className="grid grid-cols-1">
+        <div className="flex justify-center items-center w-full pt-16 pb-24">
+          {
+            appState.doneFetching ?
+            <div className="flex flex-row justify-center items-center">
+              <span className="material-icons text-4xl text-gray-600 mr-3">sentiment_very_satisfied</span>
+              <span className="text-xl text-gray-600">All characters were loaded</span>
+            </div>
+            :
+            <div className="flex justify-center items-center" ref={loader}>
+              <Loader loading={appState.loading} />
+            </div>
+          }
+        </div>
       </div>
     </div>
   );
