@@ -6,7 +6,7 @@ module.exports = {
     fontFamily: {
       'sans': ['Rubik','ui-sans-serif', 'system-ui'],
       'body': ['Roboto','ui-sans-serif', 'system-ui'],
-    }
+    },
   },
   variants: {
     extend: {},

@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import axios from 'axios'
 import { info } from 'autoprefixer';
 import Card from './components/Card';
+import Header from './components/Header';
 
 function App() {
 
@@ -57,6 +58,7 @@ function App() {
 
   return (
     <div className="container mx-auto px-7 bg-gray-100 md:px-28 lg:px-32">
+      <Header />
       <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {
           appState.characters.map((character, index) => (
