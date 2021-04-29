@@ -11,11 +11,11 @@ const Card = ({character}) => {
           <div className="text-base text-center font-medium">{ character.name }</div>
         </div>
         <div className="flex flex-row justify-center items-center p-0 mb-3">
-          <div className="text-sm text-gray-700">{ character.species }</div>
+          <div className="text-sm text-gray-700 capitalize">{ character.species }</div>
         </div>
         <div className="flex flex-row justify-center items-center p-0">
           <div className={`w-2 h-2 max-w-2 max-h-2 rounded-full mr-1 ${character.status.toLowerCase() === 'alive' ? 'bg-green-600' : character.status.toLowerCase() === 'dead' ? 'bg-red-600' : 'bg-gray-600'}`} />
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-gray-500 capitalize">
             { character.status }
           </div>
         </div>

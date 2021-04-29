@@ -5,6 +5,8 @@ import { info } from 'autoprefixer';
 import Card from './components/Card';
 import Header from './components/Header';
 import Loader from './components/Loader';
+import Filters from './components/Filters';
+import ErrorDisplay from './components/ErrorDisplay';
 
 function App() {
 
@@ -17,7 +19,12 @@ function App() {
       prev: null
     },
     characters: [],
-    doneFetching: false
+    doneFetching: false,
+    error: {
+      status: false,
+      type: null,
+      message: null
+    }
   })
   const [page, setPage] = useState(1)
   const loader = useRef(null) // Create reference to use as an intersection observer
@@ -27,9 +34,28 @@ function App() {
     await axios.get(`https://rickandmortyapi.com/api/character?page=${page}`)
           .then(res => {
             console.log(res)
-            setAppState({...appState, loading: false, info: res.data.info, characters: appState.characters.concat(res.data.results), doneFetching: res.data.info && !res.data.info.next })
+            setAppState({
+              ...appState,
+              loading: false,
+              info: res.data.info,
+              characters: appState.characters.concat(res.data.results),
+              doneFetching: res.data.info && !res.data.info.next,
+              error: {
+                status: false,
+                type: null,
+                message: null
+              }
+            })
           }).catch(err => {
-            setAppState({...appState, loading: false})
+            setAppState({
+              ...appState,
+              loading: false,
+              error: {
+                status: true,
+                type: err.response ? err.response.status : null,
+                message: err.response ? err.response.data : err.request ? JSON.stringify(err.request) : err.message ? JSON.stringify(err.message) : 'An error has ocurred. Please refresh the page.'
+              }
+            })
           })
   }
 
@@ -61,6 +87,7 @@ function App() {
   return (
     <div className="container mx-auto px-7 bg-gray-100 md:px-28 lg:px-32">
       <Header />
+      <Filters />
       <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {
           appState.characters.map((character, index) => (
@@ -70,6 +97,10 @@ function App() {
           ))
         }
       </div>
+      {
+        appState.error.status &&
+        <ErrorDisplay error={appState.error} />
+      }
       <div className="grid grid-cols-1">
         <div className="flex justify-center items-center w-full pt-16 pb-24">
           {
