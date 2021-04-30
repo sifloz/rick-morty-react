@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Card = ({ character, selectCharacterHandler }) => {
   return (
@@ -22,6 +23,10 @@ const Card = ({ character, selectCharacterHandler }) => {
       </div>
     </div>
   );
+};
+
+Card.propTypes = {
+  character: PropTypes.object.isRequired
 };
 
 export default Card;
