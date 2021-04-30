@@ -27,7 +27,8 @@ function App() {
       status: false,
       type: null,
       message: null
-    }
+    },
+    test: null
   })
   const [page, setPage] = useState(0)
   const [openCharacter, setOpenCharacter] = useState(false)
@@ -88,25 +89,41 @@ function App() {
     }
   }
 
-  const fetchCharacter = async (characterId) => {
-    await setAppState({...appState, loadingCharacter: true})
-    await axios.get(`https://rickandmortyapi.com/api/character/${characterId}`)
+  const fetchCharacterEpisodes = async (episodes) => {
+    return await axios.get(`https://rickandmortyapi.com/api/episode/${episodes}`)
       .then(res => {
-        console.log(res)
-        setAppState({
-          ...appState,
-          loadingCharacter: false,
-          character: res.data
-        })
+        return res.data
       }).catch(err => {
-        setAppState({
-          ...appState,
-          loadingCharacter: false
-        })
+        return []
       })
   }
 
+  const fetchCharacter = async (characterId) => {
+    await setAppState({...appState, loadingCharacter: true})
+    let character = await axios.get(`https://rickandmortyapi.com/api/character/${characterId}`)
+      .then(res => {
+        return res.data
+      }).catch(err => {
+        return null
+      })
+
+    // Fetch character's episodes
+    let characterEpisodes = []
+    if (character && character.episode && character.episode.length > 0) {
+      // Get character's episodes id
+      const episodes = character.episode.map(item => item.slice(item.lastIndexOf("/")+1, item.length))
+      characterEpisodes = await fetchCharacterEpisodes(episodes)
+    }
+    character.episodes = characterEpisodes.id ? [characterEpisodes] : characterEpisodes
+    setAppState({
+      ...appState,
+      loadingCharacter: false,
+      character: character
+    })
+  }
+
   const selectCharacterHandler = async (id) => {
+    // Fetch selected character
     await setAppState({
       ...appState,
       character: null
@@ -148,7 +165,7 @@ function App() {
         </div>
       }
       {
-        (!appState.loadingCharacter && appState.character) &&
+        (!appState.loadingCharacter && appState.character && appState.character.episodes) &&
         <Modal ref={cancelButtonRef} open={openCharacter} toggle={setOpenCharacter}>
           <CharacterDetailsCard character={appState.character} />
           <div className="bg-white px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">

@@ -55,48 +55,20 @@ const CharacterDetailsCard = ({ character }) => {
           <div className="flex flex-row items-start text-gray-900 py-2 mb-2 px-0">
             Episodes ({ character.episode.length })
           </div>
-          <ul className="flex flex-col w-full max-h-72 overflow-y-scroll">
-            <li className="flex flex-row py-3 px-4 rounded-lg bg-gray-200 mb-4">
-              <p className="text-gray-700 truncate">
-                S01E10 - Lorem ipsum dolor sit ament locuas loca ya
-              </p>
-            </li>
-            <li className="flex flex-row py-3 px-4 rounded-lg bg-gray-200 mb-4">
-              <p className="text-gray-700 truncate">
-                S01E10 - Lorem ipsum dolor sit ament locuas loca ya
-              </p>
-            </li>
-            <li className="flex flex-row py-3 px-4 rounded-lg bg-gray-200 mb-4">
-              <p className="text-gray-700 truncate">
-                S01E10 - Lorem ipsum dolor sit ament locuas loca ya
-              </p>
-            </li>
-            <li className="flex flex-row py-3 px-4 rounded-lg bg-gray-200 mb-4">
-              <p className="text-gray-700 truncate">
-                S01E10 - Lorem ipsum dolor sit ament locuas loca ya
-              </p>
-            </li>
-            <li className="flex flex-row py-3 px-4 rounded-lg bg-gray-200 mb-4">
-              <p className="text-gray-700 truncate">
-                S01E10 - Lorem ipsum dolor sit ament locuas loca ya
-              </p>
-            </li>
-            <li className="flex flex-row py-3 px-4 rounded-lg bg-gray-200 mb-4">
-              <p className="text-gray-700 truncate">
-                S01E10 - Lorem ipsum dolor sit ament locuas loca ya
-              </p>
-            </li>
-            <li className="flex flex-row py-3 px-4 rounded-lg bg-gray-200 mb-4">
-              <p className="text-gray-700 truncate">
-                S01E10 - Lorem ipsum dolor sit ament locuas loca ya
-              </p>
-            </li>
-            <li className="flex flex-row py-3 px-4 rounded-lg bg-gray-200 mb-4">
-              <p className="text-gray-700 truncate">
-                S01E10 - Lorem ipsum dolor sit ament locuas loca ya
-              </p>
-            </li>
-          </ul>
+          {
+            (character.episodes && character.episodes.length > 0) &&
+            <ul className="flex flex-col w-full max-h-72 overflow-y-scroll">
+              {
+                character.episodes.map((episode, episodeIndex) => (
+                  <li key={episodeIndex} className="flex flex-row py-3 px-4 rounded-lg bg-gray-200 mb-4">
+                    <p className="text-gray-700 truncate">
+                      { episode.episode } - { episode.name }
+                    </p>
+                  </li>
+                ))
+              }
+            </ul>
+          }
         </div>
       </div>
     </div>
